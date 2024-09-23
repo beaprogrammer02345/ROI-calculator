@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROI Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://via.placeholder.com/40" alt="Logo">
+            <span class="logo-text">ROI</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Product</a></li>
+                <li><a href="#">Integration</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="center-box">
+            <h1>ROI Calculator</h1>
+            <form id="roiForm">
+                <label>Expected Monthly Ad Spend ($): <span id="adSpendOutput" class="output">1000</span></label>
+                <input type="range" id="adSpend" min="100" max="10000" value="1000" step="100" oninput="updateValue('adSpendOutput', this.value)">
+                <br><br>
+
+                <label>Expected CPC ($): <span id="cpcOutput" class="output">1</span></label>
+                <input type="range" id="cpc" min="0.1" max="10" value="1" step="0.1" oninput="updateValue('cpcOutput', this.value)">
+                <br><br>
+
+                <label>Opt-In Conversion Rate (%): <span id="optInRateOutput" class="output">20</span></label>
+                <input type="range" id="optInRate" min="1" max="100" value="20" step="1" oninput="updateValue('optInRateOutput', this.value)">
+                <br><br>
+
+                <label>Lead to Customer Conversion Rate (%): <span id="leadToCustomerRateOutput" class="output">10</span></label>
+                <input type="range" id="leadToCustomerRate" min="1" max="100" value="10" step="1" oninput="updateValue('leadToCustomerRateOutput', this.value)">
+                <br><br>
+
+                <label>Average Sale Price ($): <span id="avgSalePriceOutput" class="output">100</span></label>
+                <input type="range" id="avgSalePrice" min="10" max="1000" value="100" step="10" oninput="updateValue('avgSalePriceOutput', this.value)">
+                <br><br>
+
+                <button type="button" onclick="calculateROI()">Calculate ROI</button>
+            </form>
+
+            <h2>Results</h2>
+            <p id="grossRevenue">Gross Revenue: </p>
+            <p id="netResult">Net Result: </p>
+            <p id="roi">ROI: </p>
+        </div>
+    </main>
+
+    <script>
+        // Function to update the value display of sliders
+        function updateValue(outputId, value) {
+            document.getElementById(outputId).innerHTML = value;
+        }
+
+        // Function to calculate ROI based on user inputs
+        function calculateROI() {
+            const adSpend = parseFloat(document.getElementById("adSpend").value);
+            const cpc = parseFloat(document.getElementById("cpc").value);
+            const optInRate = parseFloat(document.getElementById("optInRate").value) / 100; // Convert to decimal
+            const leadToCustomerRate = parseFloat(document.getElementById("leadToCustomerRate").value) / 100; // Convert to decimal
+            const avgSalePrice = parseFloat(document.getElementById("avgSalePrice").value);
+
+            // Calculate total clicks
+            const totalClicks = adSpend / cpc;
+
+            // Calculate total leads
+            const totalLeads = totalClicks * optInRate;
+
+            // Calculate total customers
+            const totalCustomers = totalLeads * leadToCustomerRate;
+
+            // Calculate gross revenue
+            const grossRevenue = totalCustomers * avgSalePrice;
+
+            // Calculate net result
+            const netResult = grossRevenue - adSpend;
+
+            // Calculate ROI
+            const roi = (netResult / adSpend) * 100;
+
+            // Display the results
+            document.getElementById("grossRevenue").innerHTML = `Gross Revenue: $${grossRevenue.toFixed(2)}`;
+            document.getElementById("netResult").innerHTML = `Net Result: $${netResult.toFixed(2)}`;
+            document.getElementById("roi").innerHTML = `ROI: ${roi.toFixed(2)}%`;
+        }
+    </script>
+</body>
+</html>
